@@ -1,0 +1,268 @@
+basePath: /
+definitions:
+  fiber.Map:
+    additionalProperties: true
+    type: object
+  gorm.DeletedAt:
+    properties:
+      time:
+        type: string
+      valid:
+        description: Valid is true if Time is not NULL
+        type: boolean
+    type: object
+  model.Bootcamp:
+    properties:
+      acceptGi:
+        type: boolean
+      address:
+        type: string
+      averageCost:
+        type: number
+      averageRating:
+        type: number
+      careers:
+        type: string
+      city:
+        type: string
+      country:
+        type: string
+      createdAt:
+        type: string
+      deletedAt:
+        $ref: '#/definitions/gorm.DeletedAt'
+      description:
+        type: string
+      email:
+        type: string
+      housing:
+        type: boolean
+      id:
+        type: string
+      jobAssistance:
+        type: boolean
+      jobGuarantee:
+        type: boolean
+      name:
+        type: string
+      phone:
+        type: string
+      photo:
+        type: string
+      slug:
+        type: string
+      state:
+        type: string
+      type:
+        type: string
+      updatedAt:
+        type: string
+      user:
+        $ref: '#/definitions/model.User'
+      userID:
+        type: string
+      website:
+        type: string
+      zipcode:
+        type: string
+    required:
+    - address
+    - careers
+    - description
+    - name
+    - type
+    type: object
+  model.User:
+    properties:
+      createdAt:
+        type: string
+      deletedAt:
+        $ref: '#/definitions/gorm.DeletedAt'
+      email:
+        type: string
+      id:
+        type: string
+      password:
+        type: string
+      role:
+        $ref: '#/definitions/model.UserRole'
+      updatedAt:
+        type: string
+      username:
+        type: string
+    type: object
+  model.UserRole:
+    enum:
+    - admin
+    - user
+    - guest
+    type: string
+    x-enum-varnames:
+    - AdminRole
+    - UsersRole
+    - GuestRole
+host: localhost:8080
+info:
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  description: This is a sample server for DevCamp.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: DevCamp API
+  version: "1.0"
+paths:
+  /bootcamp:
+    post:
+      consumes:
+      - multipart/form-data
+      description: Create a new BootCamp
+      parameters:
+      - description: Name
+        in: formData
+        name: name
+        required: true
+        type: string
+      - description: Description
+        in: formData
+        name: description
+        required: true
+        type: string
+      - description: Photo
+        in: formData
+        name: photo
+        required: true
+        type: file
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/model.Bootcamp'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/fiber.Map'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/fiber.Map'
+      summary: Create a new BootCamp
+      tags:
+      - BootCamps
+  /bootcamp/{bootcampId}:
+    delete:
+      description: Delete a BootCamp by ID
+      parameters:
+      - description: BootCamp ID
+        in: path
+        name: bootcampId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/fiber.Map'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/fiber.Map'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/fiber.Map'
+      summary: Delete a BootCamp by ID
+      tags:
+      - BootCamps
+    get:
+      description: Get a BootCamp by ID
+      parameters:
+      - description: BootCamp ID
+        in: path
+        name: bootcampId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Bootcamp'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/fiber.Map'
+      summary: Get a BootCamp by ID
+      tags:
+      - BootCamps
+    put:
+      consumes:
+      - application/json
+      description: Update a BootCamp by ID
+      parameters:
+      - description: BootCamp ID
+        in: path
+        name: bootcampId
+        required: true
+        type: string
+      - description: BootCamp
+        in: body
+        name: bootcamp
+        required: true
+        schema:
+          $ref: '#/definitions/model.Bootcamp'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.Bootcamp'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/fiber.Map'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/fiber.Map'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/fiber.Map'
+      summary: Update a BootCamp by ID
+      tags:
+      - BootCamps
+  /bootcamps:
+    get:
+      description: Get all BootCamps
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Bootcamp'
+            type: array
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/fiber.Map'
+      summary: Get all BootCamps
+      tags:
+      - BootCamps
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

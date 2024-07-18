@@ -1,0 +1,63 @@
+version: "3.9"
+
+services:
+  web:
+    build: .
+    env_file:
+      .env
+    ports:
+      - "8080:8080"
+    volumes:
+      - .:/usr/src/app
+    command: ./main -addr 0.0.0.0:8080
+    depends_on:
+      - db
+    networks:
+      - devnetwork
+    environment:
+    
+      # DB_HOST: db
+      # DB_USER: postgres
+      # DB_PASSWORD: demo201744.
+      # DB_NAME: devCamp
+      # DB_PORT: 5432
+
+
+      # JWT_SECRET: secretzijiwiw
+      # JWT_EXPIRE: 30d
+      # JWT_COOKIE_EXPIRE: 30
+
+
+      # EMAIL: bad313cf8d0c11
+      # EMAIL_PASSWORD: e113c0e7ddacb3
+      # SMTP_SERVER: smtp.mailtrap.io
+      # SMTP_PORT: 587
+
+      # MAX_FILE_UPLOAD: 2
+      # FILE_UPLOAD_PATH: public/upload
+
+
+  db:
+    image: postgres:14
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_DB: devCamp
+      POSTGRES_PASSWORD: demo201744.
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - devnetwork
+
+volumes:
+  postgres-db:
+
+networks:
+  devnetwork:
+    driver: bridge
